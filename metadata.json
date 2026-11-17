@@ -1,0 +1,8 @@
+{
+  "name": "Remix NoorPath — Global Da\u0027wah \u0026 New Muslim Support",
+  "description": "An international Islamic education platform offering structured foundations courses, human mentorship, multilingual learning, community directory, and an AI educational assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
