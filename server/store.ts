@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import type {
   ActivityLog,
@@ -43,7 +44,10 @@ export interface DatabaseState {
   settings: PlatformSettings;
 }
 
-const DATA_DIR = path.resolve(process.cwd(), '.data');
+const BUNDLED_DATA_FILE = path.resolve(process.cwd(), '.data', 'platform-store.json');
+const DATA_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'noorpath-data')
+  : path.resolve(process.cwd(), '.data');
 const DATA_FILE = path.join(DATA_DIR, 'platform-store.json');
 
 const HERO_IMG_FOUNDATIONS = '/src/assets/images/course_foundations_islam_1794896867599.jpg';
@@ -1015,6 +1019,12 @@ export function loadDb(): DatabaseState {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf-8');
       cachedState = JSON.parse(raw) as DatabaseState;
+      return cachedState;
+    }
+    if (DATA_FILE !== BUNDLED_DATA_FILE && fs.existsSync(BUNDLED_DATA_FILE)) {
+      const raw = fs.readFileSync(BUNDLED_DATA_FILE, 'utf-8');
+      cachedState = JSON.parse(raw) as DatabaseState;
+      saveDb(cachedState);
       return cachedState;
     }
   } catch (err) {
